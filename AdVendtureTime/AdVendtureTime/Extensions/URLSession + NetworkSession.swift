@@ -24,7 +24,6 @@ extension URLSession: NetworkSession {
             case .unsupportedURL:
                 return .unsupportedURL
             default:
-                print("+ error: ", error.code)
                 return .underlyingError
             }
         }
