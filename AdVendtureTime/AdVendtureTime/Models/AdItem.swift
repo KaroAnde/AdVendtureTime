@@ -19,6 +19,7 @@ struct AdItem: Decodable, Identifiable {
     var score: Double?
     var version: String?
     var favourite: AdFavourite?
+    var shippingOption: AdShippingOption?
     
     var fullImageURL: URL? {
         guard let imageUrl = image?.url else { return nil }
