@@ -14,7 +14,7 @@ struct VendAdCardView: View {
     let priceTotal: String?
     
     var body: some View {
-        Text("Hello, World!")
+        Text("Hello, Vend!")
     }
 }
 
