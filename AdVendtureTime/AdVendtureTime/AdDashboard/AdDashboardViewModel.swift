@@ -28,8 +28,6 @@ class AdDashboardViewModel: ObservableObject {
                 }
             }, receiveValue: { [weak self] adData in
                 self?.ads = adData.items
-                print("+ ads from request: ", adData)
-                print("+ ads in viewmodel: ", self?.ads)
             })
             .store(in: &cancellables)
         
