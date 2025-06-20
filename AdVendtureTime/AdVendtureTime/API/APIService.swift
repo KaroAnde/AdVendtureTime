@@ -9,13 +9,20 @@ import Combine
 
 class APIService {
     static let shared = APIService()
+    private let session: NetworkSession
+    private let baseURL: String
+    
+    init(session: NetworkSession = URLSession.shared, baseURL: String = APIConfig.baseURL) {
+        self.session = session
+        self.baseURL = baseURL
+    }
     
     func fetchAds() -> AnyPublisher<AdData, Error> {
-        guard let url = URL(string: APIConfig.baseURL) else {
+        guard let url = URL(string: baseURL) else {
             return Fail(error: RequestError.invalidURL)
                 .eraseToAnyPublisher()
         }
-        return URLSession.shared.dataTaskPublisher(for: url).tryMap { data, response in
+        return session.urlTaskPublisher(for: url).tryMap { data, response in
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw RequestError.invalidResponse
             }
