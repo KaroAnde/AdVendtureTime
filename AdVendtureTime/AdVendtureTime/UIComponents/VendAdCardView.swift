@@ -29,7 +29,8 @@ struct VendAdCardView: View {
             }
         }
         .clipShape(.rect(cornerRadius: 10))
-        .background(.vendDarkerPink)    }
+        .background(.vendDarkerPink)
+    }
     
     @ViewBuilder
     var asyncImageView: some View {
@@ -52,7 +53,6 @@ struct VendAdCardView: View {
                 .background(.vendRust)
                 .clipShape(.rect(topTrailingRadius: 8))
                 .lineLimit(2)
-
         }
     }
 }
@@ -66,7 +66,7 @@ struct VendAdCardPreviewHelper: View {
     }
     
     var body: some View {
-         VendAdCardView(
+        VendAdCardView(
             imageURL: viewModel.ads.first?.fullImageURL,
             title: viewModel.ads.first?.title,
             location: viewModel.ads.first?.location,
