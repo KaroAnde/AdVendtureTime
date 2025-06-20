@@ -26,7 +26,7 @@ struct AdItem: Decodable, Identifiable {
     }
     
     enum CodingKeys: String, CodingKey {
-        case id
+        case id, url, location, type, price, categories, image, score, version, favourite
         case adType = "ad-type"
         case title = "description"
     }
