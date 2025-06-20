@@ -7,18 +7,19 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct AdDashboardView: View {
+    @ObservedObject var viewModel = AdDashboardViewModel()
+    
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            Button("Fetch ads") {
+                viewModel.fetchAds()
+            }
         }
         .padding()
     }
 }
 
 #Preview {
-    ContentView()
+    AdDashboardView()
 }
