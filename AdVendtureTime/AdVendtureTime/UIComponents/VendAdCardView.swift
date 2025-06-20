@@ -11,7 +11,7 @@ struct VendAdCardView: View {
     let imageURL: URL?
     var title: String?
     var location: String?
-    let priceTotal: Int?
+    let priceValue: Int?
     
     var body: some View {
         VStack(spacing: 8) {
@@ -21,11 +21,13 @@ struct VendAdCardView: View {
                 Text(title ?? "")
                     .titleStyle()
                     .padding()
+                    .accessibilityModifiers(label: title ?? "Title is missing")
                 
                 Text(location ?? "")
                     .bold()
                     .descriptionStyle()
                     .padding()
+                    .accessibilityModifiers(label: location ?? "Location is missing")
             }
         }
         .clipShape(.rect(cornerRadius: 10))
@@ -47,12 +49,16 @@ struct VendAdCardView: View {
                     Text("Return unknown default")
                 }
             }
-            Text((priceTotal?.separatorFormatted() ?? "maah") + " Kr")
+            .accessibilityModifiers(label: title ?? "Description is missing")
+            
+            Text((priceValue?.separatorFormatted() ?? "") + " Kr")
                 .padding(.horizontal, 16)
                 .foregroundStyle(.vendLightPink)
                 .background(.vendRust)
                 .clipShape(.rect(topTrailingRadius: 8))
                 .lineLimit(2)
+                .accessibilityModifiers(label: String(priceValue ?? 0),
+                                        hint: "Price of item")
         }
     }
 }
@@ -70,7 +76,7 @@ struct VendAdCardPreviewHelper: View {
             imageURL: viewModel.ads.first?.fullImageURL,
             title: viewModel.ads.first?.title,
             location: viewModel.ads.first?.location,
-            priceTotal: viewModel.ads.first?.price?.total)
+            priceValue: viewModel.ads.first?.price?.value)
     }
 }
 
