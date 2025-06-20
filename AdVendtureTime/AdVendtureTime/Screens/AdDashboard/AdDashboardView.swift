@@ -11,12 +11,21 @@ struct AdDashboardView: View {
     @ObservedObject var viewModel = AdDashboardViewModel()
     
     var body: some View {
-        VStack {
-            Button("Fetch ads") {
-                viewModel.fetchAds()
+        let columns = [GridItem(.adaptive(minimum: 150))]
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 8) {
+                ForEach(0..<2) { column in
+                    GridRow{
+                        ForEach(viewModel.ads, id: \.id) { ad in
+                            VendAdCardView(imageURL: ad.fullImageURL,
+                                           title: ad.title,
+                                           location: ad.location,
+                                           priceValue: ad.price?.value)
+                        }
+                    }
+                }
             }
         }
-        .padding()
     }
 }
 
