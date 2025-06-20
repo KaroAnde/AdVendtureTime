@@ -15,6 +15,7 @@ final class APIServiceTests: XCTestCase {
     let adDataJsonAllValues = MockAdDataJson.adDataJsonAllvalues
     let adDataJsonNilValues = MockAdDataJson.adDataJsonNilValues
     
+    
     func testFetchAdDataReturnsDecodedData() {
         let data = Data(adDataJsonAllValues.utf8)
         
@@ -46,13 +47,13 @@ final class APIServiceTests: XCTestCase {
         wait(for: [expectation], timeout: 1)
     }
     
-    func testInvalidUrl() {
-        let apiService = APIService(session: mockSession, baseURL: "not an url at all")
+    func testUnsupportedUrl() {
+        let apiService = APIService(baseURL: "not an url at all")
         let expectation = self.expectation(description: "Expected to get invalidUrl error")
         
         apiService.fetchAds().sink(receiveCompletion: { completion in
-                if case .failure(let error as RequestError) = completion {
-                    XCTAssertEqual(error, .invalidURL)
+            if case .failure(let error as RequestError) = completion {
+                XCTAssertEqual(error, .unsupportedURL)
                     expectation.fulfill()
                 } else {
                     XCTFail("Should have given error invalidURL, but got \(completion)")
@@ -71,6 +72,24 @@ final class APIServiceTests: XCTestCase {
         apiService.fetchAds().sink(receiveCompletion: { completion in
             if case .failure(let error as RequestError) = completion {
                 XCTAssertEqual(error, .notConnectedToInternet)
+                expectation.fulfill()
+            } else {
+                XCTFail("Should have given error notConnectedToInternet, but got \(completion)")
+            }
+        }, receiveValue: { _ in})
+        .store(in: &cancellables)
+        
+        wait(for: [expectation], timeout: 1)
+    }
+    
+    func testNetworkConnectionLost() {
+        mockSession.result = .failure(.networkConnectionLost)
+        let apiService = APIService(session: mockSession)
+        let expectation = self.expectation(description: "Expected to lose network connection")
+        
+        apiService.fetchAds().sink(receiveCompletion: { completion in
+            if case .failure(let error as RequestError) = completion {
+                XCTAssertEqual(error, .networkConnectionLost)
                 expectation.fulfill()
             } else {
                 XCTFail("Should have given error notConnectedToInternet, but got \(completion)")

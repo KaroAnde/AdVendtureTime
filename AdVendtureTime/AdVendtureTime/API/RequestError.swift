@@ -12,6 +12,7 @@ public enum RequestError: Error, CustomDebugStringConvertible, Equatable {
     case notConnectedToInternet
     case networkConnectionLost
     case timedOut
+    case unsupportedURL
     
     // Request error
     case decoding(error: DecodingError, data: Data)
@@ -45,6 +46,8 @@ public enum RequestError: Error, CustomDebugStringConvertible, Equatable {
             return "NetworkConnectionLost"
         case .timedOut:
             return "Session timed out"
+        case .unsupportedURL:
+            return "Unsupported URL"
         }
     }
     
@@ -66,6 +69,9 @@ public enum RequestError: Error, CustomDebugStringConvertible, Equatable {
             return .networkConnectionLost
         case .timedOut:
             return .timedOut
+        case .unsupportedURL:
+            return .unsupportedURL
+            
         }
     }
 }
@@ -76,6 +82,7 @@ enum RequestErrorType {
     case notConnectedToInternet
     case networkConnectionLost
     case timedOut
+    case unsupportedURL
     
     // Request error
     case decoding

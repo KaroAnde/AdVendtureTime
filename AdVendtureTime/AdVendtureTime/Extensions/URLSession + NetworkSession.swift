@@ -10,7 +10,8 @@ import Combine
 
 extension URLSession: NetworkSession {
     func urlTaskPublisher(for url: URL) -> AnyPublisher<(data: Data, response: URLResponse), RequestError> {
-        self.dataTaskPublisher(for: url).mapError { error in
+        self.dataTaskPublisher(for: url)
+            .mapError { error in
             switch error.code {
             case .badURL:
                 return .invalidURL
@@ -20,7 +21,10 @@ extension URLSession: NetworkSession {
                 return .timedOut
             case .networkConnectionLost:
                 return .networkConnectionLost
+            case .unsupportedURL:
+                return .unsupportedURL
             default:
+                print("+ error: ", error.code)
                 return .underlyingError
             }
         }
