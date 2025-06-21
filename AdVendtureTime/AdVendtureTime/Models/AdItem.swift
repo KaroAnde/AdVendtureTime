@@ -32,3 +32,6 @@ struct AdItem: Decodable, Identifiable {
         case title = "description"
     }
 }
+
+
+

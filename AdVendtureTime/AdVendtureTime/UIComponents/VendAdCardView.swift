@@ -21,6 +21,7 @@ struct VendAdCardView: View {
                 Text(title ?? "")
                     .titleStyle()
                     .padding()
+                    .lineLimit(1)
                     .accessibilityModifiers(label: title ?? "Title is missing")
                 
                 Text(location ?? "")
@@ -40,13 +41,15 @@ struct VendAdCardView: View {
             AsyncImage(url: imageURL) { phase in
                 switch phase {
                 case .empty:
-                    Text("Return emptyview")
+                    emptyImageView
                 case .success(let image):
-                    image.resizable().aspectRatio(contentMode: .fit)
+                    image
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
                 case .failure(_):
-                    Text("Return failure view")
+                    emptyImageView
                 @unknown default:
-                    Text("Return unknown default")
+                    emptyImageView
                 }
             }
             .accessibilityModifiers(label: title ?? "Description is missing")
@@ -60,6 +63,13 @@ struct VendAdCardView: View {
                 .accessibilityModifiers(label: String(priceValue ?? 0),
                                         hint: "Price of item")
         }
+    }
+    
+    @ViewBuilder
+    var emptyImageView: some View {
+        Image("missingImage")
+            .resizable()
+            .aspectRatio(contentMode: .fit)
     }
 }
 
@@ -81,5 +91,5 @@ struct VendAdCardPreviewHelper: View {
 }
 
 #Preview {
-    VendAdCardPreviewHelper(mockType: .nonNilValuesMock)
+    VendAdCardPreviewHelper(mockType: .nilValuesMock)
 }
