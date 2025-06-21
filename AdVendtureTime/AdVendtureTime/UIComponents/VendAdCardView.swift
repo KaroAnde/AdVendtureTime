@@ -14,22 +14,19 @@ struct VendAdCardView: View {
     let priceValue: Int?
     
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(alignment: .leading, spacing: 8) {
             asyncImageView
             
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 16) {
                 Text(title ?? "")
                     .titleStyle()
-                    .padding()
-                    .lineLimit(1)
+                    .lineLimit(2)
                     .accessibilityModifiers(label: title ?? "Title is missing")
                 
                 Text(location ?? "")
-                    .bold()
                     .descriptionStyle()
-                    .padding()
                     .accessibilityModifiers(label: location ?? "Location is missing")
-            }
+            }.padding(8)
         }
         .clipShape(.rect(cornerRadius: 10))
         .background(.vendDarkerPink)
@@ -45,23 +42,33 @@ struct VendAdCardView: View {
                 case .success(let image):
                     image
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .scaledToFill()
+                        .onAppear {
+                            withAnimation(.easeIn(duration: 0.3)) {
+                                print("whii")
+                            }
+                        }
                 case .failure(_):
                     emptyImageView
                 @unknown default:
                     emptyImageView
                 }
             }
+            .frame(width: 180, height: 150)
+            .clipped()
+            .cornerRadius(8)
             .accessibilityModifiers(label: title ?? "Description is missing")
             
-            Text((priceValue?.separatorFormatted() ?? "") + " Kr")
-                .padding(.horizontal, 16)
-                .foregroundStyle(.vendLightPink)
-                .background(.vendRust)
-                .clipShape(.rect(topTrailingRadius: 8))
-                .lineLimit(2)
-                .accessibilityModifiers(label: String(priceValue ?? 0),
-                                        hint: "Price of item")
+            if let priceValue = priceValue {
+                Text((priceValue.separatorFormatted()) + " Kr")
+                    .padding(.horizontal, 16)
+                    .foregroundStyle(.vendLightPink)
+                    .background(.vendRust)
+                    .clipShape(.rect(topTrailingRadius: 8))
+                    .lineLimit(2)
+                    .accessibilityModifiers(label: String(priceValue),
+                                            hint: "Price of item")
+            }
         }
     }
     
@@ -69,7 +76,7 @@ struct VendAdCardView: View {
     var emptyImageView: some View {
         Image("missingImage")
             .resizable()
-            .aspectRatio(contentMode: .fit)
+            .scaledToFill()
     }
 }
 
@@ -91,5 +98,5 @@ struct VendAdCardPreviewHelper: View {
 }
 
 #Preview {
-    VendAdCardPreviewHelper(mockType: .nilValuesMock)
+    VendAdCardPreviewHelper(mockType: .nonNilValuesMock)
 }

@@ -12,7 +12,7 @@ extension View {
         self
             .foregroundStyle(.vendRust)
             .multilineTextAlignment(.leading)
-            .font(.title3)
+            .font(.headline)
     }
     
     func descriptionStyle() -> some View {
