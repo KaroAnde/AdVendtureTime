@@ -99,9 +99,12 @@ struct VendAdCardView: View {
     
     @ViewBuilder
     var emptyImageView: some View {
-        Image("missingImage")
+        Image(systemName: "photo.badge.exclamationmark")
             .resizable()
             .scaledToFit()
+            .padding()
+            .foregroundStyle(.vendRust)
+            .opacity(0.5)
     }
 }
 
@@ -124,5 +127,5 @@ struct VendAdCardPreviewHelper: View {
 }
 
 #Preview {
-    VendAdCardPreviewHelper(mockType: .nonNilValuesMock)
+    VendAdCardPreviewHelper(mockType: .nilValuesMock)
 }
