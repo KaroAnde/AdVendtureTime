@@ -11,49 +11,99 @@ struct VendAdCardView: View {
     let imageURL: URL?
     var title: String?
     var location: String?
-    let priceTotal: Int?
+    let priceValue: Int?
+    var isFavourite: Bool = false
     
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(alignment: .leading, spacing: 8) {
             asyncImageView
-            
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 16) {
+                Text(location ?? "")
+                    .descriptionStyle()
+                    .accessibilityModifiers(label: location ?? "Location is missing")
+                
                 Text(title ?? "")
                     .titleStyle()
-                    .padding()
-                
-                Text(location ?? "")
-                    .bold()
-                    .descriptionStyle()
-                    .padding()
+                    .lineLimit(2)
+                    .accessibilityModifiers(label: title ?? "Title is missing")
             }
+            .padding(8)
         }
-        .clipShape(.rect(cornerRadius: 10))
         .background(.vendDarkerPink)
+        .clipShape(.rect(cornerRadius: 8))
     }
     
     @ViewBuilder
     var asyncImageView: some View {
-        ZStack(alignment: .bottomLeading) {
-            AsyncImage(url: imageURL) { phase in
-                switch phase {
-                case .empty:
-                    Text("Return emptyview")
-                case .success(let image):
-                    image.resizable().aspectRatio(contentMode: .fit)
-                case .failure(_):
-                    Text("Return failure view")
-                @unknown default:
-                    Text("Return unknown default")
-                }
+        AsyncImage(url: imageURL) { phase in
+            switch phase {
+            case .empty:
+                emptyImageView
+            case .success(let image):
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .onAppear {
+                        withAnimation(.easeIn(duration: 0.3)) {
+                            print("handle animation")
+                        }
+                    }
+            case .failure(_):
+                emptyImageView
+            @unknown default:
+                emptyImageView
             }
-            Text((priceTotal?.separatorFormatted() ?? "maah") + " Kr")
+        }
+        .frame(maxWidth: .infinity)
+        .clipped()
+        .clipShape(.rect(cornerRadius: 8))
+        .overlay(alignment: .topTrailing) {
+            favouriteButton
+        }
+        .overlay(alignment: .bottomLeading) {
+            priceValueText
+        }
+        .accessibilityModifiers(label: title ?? "Description is missing",
+                                traits: .isImage)
+    }
+    
+    @ViewBuilder
+    var favouriteButton: some View {
+        Image(systemName: isFavourite ? "heart.fill" : "heart" )
+            .resizable()
+            .scaledToFit()
+            .padding(8)
+            .frame(width: 44, height: 44)
+            .foregroundStyle(.vendRust)
+            .background(.vendLightPink)
+            .clipShape(.rect(bottomLeadingRadius: 8))
+            .onTapGesture {
+                print("save to favourites")
+            }
+    }
+    
+    @ViewBuilder
+    var priceValueText: some View {
+        if let priceValue = priceValue {
+            Text((priceValue.separatorFormatted()) + " Kr")
                 .padding(.horizontal, 16)
-                .foregroundStyle(.vendLightPink)
+                .foregroundStyle(.vendDarkerPink)
                 .background(.vendRust)
                 .clipShape(.rect(topTrailingRadius: 8))
                 .lineLimit(2)
+                .accessibilityModifiers(label: String(priceValue),
+                                        hint: "Price of item")
         }
+    }
+    
+    @ViewBuilder
+    var emptyImageView: some View {
+        Image(systemName: "photo.badge.exclamationmark")
+            .resizable()
+            .scaledToFit()
+            .padding()
+            .foregroundStyle(.vendRust)
+            .opacity(0.5)
     }
 }
 
@@ -70,10 +120,11 @@ struct VendAdCardPreviewHelper: View {
             imageURL: viewModel.ads.first?.fullImageURL,
             title: viewModel.ads.first?.title,
             location: viewModel.ads.first?.location,
-            priceTotal: viewModel.ads.first?.price?.total)
+            priceValue: viewModel.ads.first?.price?.value,
+            isFavourite: false)
     }
 }
 
 #Preview {
-    VendAdCardPreviewHelper(mockType: .nonNilValuesMock)
+    VendAdCardPreviewHelper(mockType: .nilValuesMock)
 }
