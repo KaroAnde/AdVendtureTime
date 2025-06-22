@@ -43,11 +43,8 @@ struct VendAdCardView: View {
                 image
                     .resizable()
                     .scaledToFit()
-                    .onAppear {
-                        withAnimation(.easeIn(duration: 0.3)) {
-                            print("handle animation")
-                        }
-                    }
+                    .transition(.opacity)
+                    .animation(.easeIn(duration: 0.3), value: phase.image)
             case .failure(_):
                 emptyImageView
             @unknown default:
