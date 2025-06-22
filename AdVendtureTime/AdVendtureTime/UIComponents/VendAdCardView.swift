@@ -12,6 +12,7 @@ struct VendAdCardView: View {
     var title: String?
     var location: String?
     let priceValue: Int?
+    var isFavourite: Bool = false
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -35,42 +36,64 @@ struct VendAdCardView: View {
     
     @ViewBuilder
     var asyncImageView: some View {
-        ZStack(alignment: .bottomLeading) {
-            AsyncImage(url: imageURL) { phase in
-                switch phase {
-                case .empty:
-                    emptyImageView
-                case .success(let image):
-                    image
-                        .resizable()
-                        .scaledToFit()
-                        .onAppear {
-                            withAnimation(.easeIn(duration: 0.3)) {
-                                print("whii")
-                            }
+        AsyncImage(url: imageURL) { phase in
+            switch phase {
+            case .empty:
+                emptyImageView
+            case .success(let image):
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .onAppear {
+                        withAnimation(.easeIn(duration: 0.3)) {
+                            print("handle animation")
                         }
-                case .failure(_):
-                    emptyImageView
-                @unknown default:
-                    emptyImageView
-                }
+                    }
+            case .failure(_):
+                emptyImageView
+            @unknown default:
+                emptyImageView
             }
-            .frame(maxWidth: .infinity)
-            .clipped()
-            .clipShape(.rect(cornerRadius: 8))
-            .accessibilityModifiers(label: title ?? "Description is missing",
-                                    traits: .isImage)
-            
-            if let priceValue = priceValue {
-                Text((priceValue.separatorFormatted()) + " Kr")
-                    .padding(.horizontal, 16)
-                    .foregroundStyle(.vendLightPink)
-                    .background(.vendRust)
-                    .clipShape(.rect(topTrailingRadius: 8))
-                    .lineLimit(2)
-                    .accessibilityModifiers(label: String(priceValue),
-                                            hint: "Price of item")
+        }
+        .frame(maxWidth: .infinity)
+        .clipped()
+        .clipShape(.rect(cornerRadius: 8))
+        .overlay(alignment: .topTrailing) {
+            favouriteButton
+        }
+        .overlay(alignment: .bottomLeading) {
+            priceValueText
+        }
+        .accessibilityModifiers(label: title ?? "Description is missing",
+                                traits: .isImage)
+    }
+    
+    @ViewBuilder
+    var favouriteButton: some View {
+        Image(systemName: isFavourite ? "heart.fill" : "heart" )
+            .resizable()
+            .scaledToFit()
+            .padding(8)
+            .frame(width: 44, height: 44)
+            .foregroundStyle(.vendRust)
+            .background(.vendLightPink)
+            .clipShape(.rect(bottomLeadingRadius: 8))
+            .onTapGesture {
+                print("save to favourites")
             }
+    }
+    
+    @ViewBuilder
+    var priceValueText: some View {
+        if let priceValue = priceValue {
+            Text((priceValue.separatorFormatted()) + " Kr")
+                .padding(.horizontal, 16)
+                .foregroundStyle(.vendDarkerPink)
+                .background(.vendRust)
+                .clipShape(.rect(topTrailingRadius: 8))
+                .lineLimit(2)
+                .accessibilityModifiers(label: String(priceValue),
+                                        hint: "Price of item")
         }
     }
     
@@ -95,7 +118,8 @@ struct VendAdCardPreviewHelper: View {
             imageURL: viewModel.ads.first?.fullImageURL,
             title: viewModel.ads.first?.title,
             location: viewModel.ads.first?.location,
-            priceValue: viewModel.ads.first?.price?.value)
+            priceValue: viewModel.ads.first?.price?.value,
+            isFavourite: false)
     }
 }
 
