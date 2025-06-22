@@ -17,7 +17,6 @@ struct VendAdCardView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             asyncImageView
-            
             VStack(alignment: .leading, spacing: 16) {
                 Text(location ?? "")
                     .descriptionStyle()
