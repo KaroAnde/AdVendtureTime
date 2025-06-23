@@ -10,14 +10,14 @@ import SwiftUI
 
 
 class FavouritesViewModel: ObservableObject {
-    @Published var favouriteAds: [LocalAdItem] = []
+    @Published var favouriteAds: [AdItem] = []
     var cancellables = Set<AnyCancellable>()
     var favouritesService: FavouritesPersistenceService
-    var repository: AdDashboardRepository
+    var repository: VendAdRepository
     
     init(service: FavouritesPersistenceService = FavouritesPersistenceService.shared){
         self.favouritesService = service
-        self.repository = AdDashboardRepository(favouritesService: service)
+        self.repository = VendAdRepository(favouritesService: service)
         fetchAdsFromFile()
     }
     

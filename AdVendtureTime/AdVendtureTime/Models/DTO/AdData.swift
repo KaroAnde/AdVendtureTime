@@ -8,5 +8,5 @@
 struct AdData: Decodable {
     var isPersonal: Bool?
     var hasConsent: Bool?
-    var items: [AdItem]
+    var items: [AdItemResponse]
 }

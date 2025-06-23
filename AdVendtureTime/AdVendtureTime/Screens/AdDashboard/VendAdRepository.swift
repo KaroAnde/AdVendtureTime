@@ -9,10 +9,10 @@ import Combine
 import Foundation
 
 protocol AdDashboardRepositoryProtocol {
-    func getAds() -> AnyPublisher<[LocalAdItem], Error>
+    func getAds() -> AnyPublisher<[AdItem], Error>
 }
 
-class AdDashboardRepository: AdDashboardRepositoryProtocol {
+class VendAdRepository: AdDashboardRepositoryProtocol {
     let apiService: APIService
     let favouritesService: FavouritesPersistenceService
     
@@ -21,10 +21,10 @@ class AdDashboardRepository: AdDashboardRepositoryProtocol {
         self.favouritesService = favouritesService
     }
     
-    func getAds() -> AnyPublisher<[LocalAdItem], Error> {
+    func getAds() -> AnyPublisher<[AdItem], Error> {
        let apiAds = apiService.fetchAds().map { ads in
             ads.items.map { adItem in
-                            LocalAdItem(item: adItem,
+                            AdItem(item: adItem,
                                    priceValue: adItem.price?.value,
                                    shippingOption: adItem.shippingOption?.label,
                                    isFavourite: false,
@@ -45,12 +45,14 @@ class AdDashboardRepository: AdDashboardRepositoryProtocol {
         }.eraseToAnyPublisher()
     }
     
-    func updateFavourites(newFavouriteAd: LocalAdItem) -> AnyPublisher<URL, Error>{
-        favouritesService.updateFavouriteAdItems(favouriteAds: [newFavouriteAd]).eraseToAnyPublisher()
+    func updateFavourites(newFavouriteAd: AdItem) -> AnyPublisher<URL, Error>{
+        favouritesService.updateFavouriteAdItems(favouriteAds: [newFavouriteAd])
+            .eraseToAnyPublisher()
     }
     
-    func fetchAdsFromFile() -> AnyPublisher<[LocalAdItem], Error> {
+    func fetchAdsFromFile() -> AnyPublisher<[AdItem], Error> {
         favouritesService
-            .readFromFavouriteAdItems().eraseToAnyPublisher()
+            .readFromFavouriteAdItems()
+            .eraseToAnyPublisher()
     }
 }

@@ -8,9 +8,9 @@ import Combine
 import Foundation
 
 protocol FavouritesPersistenceServiceProtocol {
-    func readFromFavouriteAdItems() -> AnyPublisher<[LocalAdItem], Error>
-    func writeToFavouriteAdItems(items: [LocalAdItem]) -> AnyPublisher<URL, Error>
-    func updateFavouriteAdItems(favouriteAds: [LocalAdItem]) -> AnyPublisher<URL, Error>
+    func readFromFavouriteAdItems() -> AnyPublisher<[AdItem], Error>
+    func writeToFavouriteAdItems(items: [AdItem]) -> AnyPublisher<URL, Error>
+    func updateFavouriteAdItems(favouriteAds: [AdItem]) -> AnyPublisher<URL, Error>
 }
 
 final class FavouritesPersistenceService: FavouritesPersistenceServiceProtocol {
@@ -19,15 +19,15 @@ final class FavouritesPersistenceService: FavouritesPersistenceServiceProtocol {
     
     private let fileName = "VendAdItem.json"
     
-    func readFromFavouriteAdItems() -> AnyPublisher<[LocalAdItem],Error> {
+    func readFromFavouriteAdItems() -> AnyPublisher<[AdItem],Error> {
         ioPublisher { fileUrl in
             let data = try Data(contentsOf: fileUrl)
-            return try JSONDecoder().decode([LocalAdItem].self, from: data)
+            return try JSONDecoder().decode([AdItem].self, from: data)
         }
     }
     
     
-    func writeToFavouriteAdItems(items: [LocalAdItem]) -> AnyPublisher<URL,Error> {
+    func writeToFavouriteAdItems(items: [AdItem]) -> AnyPublisher<URL,Error> {
         ioPublisher { fileUrl in
             let data = try JSONEncoder().encode(items)
             try data.write(to: fileUrl, options: .atomic)
@@ -35,9 +35,9 @@ final class FavouritesPersistenceService: FavouritesPersistenceServiceProtocol {
         }
     }
     
-    func updateFavouriteAdItems(favouriteAds: [LocalAdItem]) -> AnyPublisher<URL,Error> {
+    func updateFavouriteAdItems(favouriteAds: [AdItem]) -> AnyPublisher<URL,Error> {
         readFromFavouriteAdItems()
-            .catch { error -> AnyPublisher<[LocalAdItem], Error> in
+            .catch { error -> AnyPublisher<[AdItem], Error> in
                 if (error as? CocoaError)?.code == .fileNoSuchFile {
                     return Just([]).setFailureType(to: Error.self).eraseToAnyPublisher()
                 }

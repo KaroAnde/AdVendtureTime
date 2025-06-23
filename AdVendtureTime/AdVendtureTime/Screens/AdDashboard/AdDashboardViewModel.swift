@@ -9,16 +9,16 @@ import SwiftUI
 import Combine
 
 class AdDashboardViewModel: ObservableObject {
-    @Published var ads: [LocalAdItem] = []
+    @Published var ads: [AdItem] = []
     var cancellables = Set<AnyCancellable>()
     var apiService: APIService
     var favouritesService: FavouritesPersistenceService
-    var repository: AdDashboardRepository
+    var repository: VendAdRepository
     
     init(apiService: APIService = APIService.shared, favouritesService: FavouritesPersistenceService = FavouritesPersistenceService.shared) {
         self.apiService = apiService
         self.favouritesService = favouritesService
-        self.repository = AdDashboardRepository(apiService: apiService, favouritesService: favouritesService)
+        self.repository = VendAdRepository(apiService: apiService, favouritesService: favouritesService)
         fetchAds()
     }
     
@@ -39,7 +39,7 @@ class AdDashboardViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func updateFavourites(ad: LocalAdItem) {
+    func updateFavourites(ad: AdItem) {
         favouritesService.updateFavouriteAdItems(favouriteAds: [ad])
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in

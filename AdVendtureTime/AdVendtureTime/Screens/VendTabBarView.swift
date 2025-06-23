@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct VendTabBarView: View {
     var body: some View {

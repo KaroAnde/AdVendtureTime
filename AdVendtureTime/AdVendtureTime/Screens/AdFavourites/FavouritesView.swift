@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct FavouritesView: View {
     @ObservedObject var viewModel: FavouritesViewModel = FavouritesViewModel()

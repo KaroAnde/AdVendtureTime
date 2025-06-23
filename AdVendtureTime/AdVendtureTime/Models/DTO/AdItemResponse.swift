@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct AdItem: Codable, Identifiable {
+struct AdItemResponse: Codable, Identifiable {
     var title: String?
     var id: String
     var url: String?

@@ -5,10 +5,9 @@
 //  Created by Karoline Skumsrud Andersen on 22/06/2025.
 //
 
-import SwiftData
 import Foundation
 
-class LocalAdItem: Codable {
+class AdItem: Codable {
     var title: String?
     var id: String
     var url: String?
@@ -49,8 +48,8 @@ class LocalAdItem: Codable {
     }
 }
 
-extension LocalAdItem {
-    convenience init(item: AdItem, priceValue: Int?, shippingOption: String?, isFavourite: Bool = false, fullImageURL: URL?) {
+extension AdItem {
+    convenience init(item: AdItemResponse, priceValue: Int?, shippingOption: String?, isFavourite: Bool = false, fullImageURL: URL?) {
         self.init(
             title: item.title,
             id: item.id,
