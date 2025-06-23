@@ -18,6 +18,8 @@ struct VendTabBarView: View {
 }
 
 struct VendCustomTabbar: View {
+    let adDashboardViewModel = AdDashboardViewModel()
+    let favouritesViewModel = FavouritesViewModel()
     @State private var selectedTab = 0
     var body: some View {
         VStack(spacing: 0){
@@ -72,11 +74,11 @@ struct VendCustomTabbar: View {
     var tabContent: some View {
         switch selectedTab {
         case 0:
-            AdDashboardView()
+            AdDashboardView(viewModel: adDashboardViewModel)
         case 1:
-            FavouritesView()
+            FavouritesView(viewModel: favouritesViewModel)
         default:
-            AdDashboardView()
+            AdDashboardView(viewModel: adDashboardViewModel)
         }
     }
 }

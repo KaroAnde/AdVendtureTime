@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AdDashboardView: View {
-    @ObservedObject var viewModel = AdDashboardViewModel()
+    @StateObject var viewModel: AdDashboardViewModel
  
     
     var body: some View {
@@ -34,5 +34,5 @@ struct AdDashboardView: View {
 }
 
 #Preview {
-    AdDashboardView()
+    AdDashboardView(viewModel: AdDashboardViewModel())
 }
