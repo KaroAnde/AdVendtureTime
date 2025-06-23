@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FavouritesView: View {
-    @ObservedObject var viewModel: FavouritesViewModel = FavouritesViewModel()
+    @StateObject var viewModel: FavouritesViewModel
     var body: some View {
         if viewModel.favouriteAds.isEmpty {
             emptyView
@@ -32,7 +32,7 @@ struct FavouritesView: View {
     
     @ViewBuilder
     var emptyView: some View {
-        var imageSize: CGFloat = 50
+        let imageSize: CGFloat = 50
         VStack {
             Spacer()
             Image(systemName:"star.slash")
@@ -47,5 +47,5 @@ struct FavouritesView: View {
 }
 
 #Preview {
-    FavouritesView()
+    FavouritesView(viewModel: FavouritesViewModel())
 }
