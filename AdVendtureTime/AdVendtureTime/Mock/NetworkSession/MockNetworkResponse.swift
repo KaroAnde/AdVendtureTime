@@ -19,6 +19,7 @@ struct MockAdData {
         self.mockType = mockType
     }
     
+    // switch between mock that contains nil values and mock with all values
     var data: Data {
         switch mockType {
         case .nonNilValuesMock:

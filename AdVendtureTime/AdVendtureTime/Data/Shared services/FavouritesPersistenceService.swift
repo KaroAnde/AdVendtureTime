@@ -13,6 +13,7 @@ protocol FavouritesPersistenceServiceProtocol {
     func updateFavouriteAdItems(favouriteAds: [AdItem]) -> AnyPublisher<URL, Error>
 }
 
+/// Service layer handles reading and writing raw data to locally saved folders.
 final class FavouritesPersistenceService: FavouritesPersistenceServiceProtocol {
     static let shared = FavouritesPersistenceService()
     private let fileManager: FileManager = FileManager.default
@@ -30,10 +31,10 @@ final class FavouritesPersistenceService: FavouritesPersistenceServiceProtocol {
         }
     }
     
+    // saves the ads image and json to a file in folders to use them offline
     func writeToFavouriteAdItems(items: [AdItem]) -> AnyPublisher<URL,Error> {
         ioPublisher { fileUrl in
             let adImageFolder = try self.createImagesFolderURL()
-            
             let itemAndImage: [AdItem] = try items.map { item in
                 if item.localImageFileName == nil,
                    let remoteURL = item.fullImageURL,
@@ -80,6 +81,7 @@ final class FavouritesPersistenceService: FavouritesPersistenceServiceProtocol {
             .eraseToAnyPublisher()
     }
     
+    // helper functions to avoid duplicate code
     private func ioPublisher<T>(_ url: @escaping (URL) throws -> T) -> AnyPublisher<T, Error> {
         Future { [weak self] promise in
             DispatchQueue.global(qos: .utility).async {
