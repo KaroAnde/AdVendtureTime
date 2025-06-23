@@ -14,9 +14,11 @@ protocol AdDashboardRepositoryProtocol {
 
 class AdDashboardRepository: AdDashboardRepositoryProtocol {
     let apiService: APIService
+    let favouritesService: FavouritesPersistenceService
     
-    init(apiService: APIService) {
+    init(apiService: APIService = APIService.shared, favouritesService: FavouritesPersistenceService) {
         self.apiService = apiService
+        self.favouritesService = favouritesService
     }
     
     func getAds() -> AnyPublisher<[LocalAdItem], Error> {
@@ -36,26 +38,19 @@ class AdDashboardRepository: AdDashboardRepositoryProtocol {
             let favouriteIds = Set(savedFavourites.map { $0.id })
             
             return remoteAds.map { remote in
-                var updated = remote
+                let updated = remote
                 updated.isFavourite = favouriteIds.contains(remote.id)
                 return updated
             }
         }.eraseToAnyPublisher()
     }
     
-    func saveToFavourites(newFavouriteAd: LocalAdItem) -> AnyPublisher<URL, Error>{
-        FileManager
-            .default
-            .testWriteToLocalAdItem(newFavouriteAds: [newFavouriteAd])
-            .eraseToAnyPublisher()
+    func updateFavourites(newFavouriteAd: LocalAdItem) -> AnyPublisher<URL, Error>{
+        favouritesService.updateFavouriteAdItems(favouriteAds: [newFavouriteAd]).eraseToAnyPublisher()
     }
-    
     
     func fetchAdsFromFile() -> AnyPublisher<[LocalAdItem], Error> {
-        FileManager
-            .default
-            .readFavouriteAds()
-            .eraseToAnyPublisher()
+        favouritesService
+            .readFromFavouriteAdItems().eraseToAnyPublisher()
     }
-    
 }

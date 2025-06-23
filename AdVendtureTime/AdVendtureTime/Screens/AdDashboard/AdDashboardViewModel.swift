@@ -11,12 +11,14 @@ import Combine
 class AdDashboardViewModel: ObservableObject {
     @Published var ads: [LocalAdItem] = []
     var cancellables = Set<AnyCancellable>()
-    var service: APIService
+    var apiService: APIService
+    var favouritesService: FavouritesPersistenceService
     var repository: AdDashboardRepository
     
-    init(service: APIService = APIService.shared) {
-        self.service = service
-        self.repository = AdDashboardRepository(apiService: service)
+    init(apiService: APIService = APIService.shared, favouritesService: FavouritesPersistenceService = FavouritesPersistenceService.shared) {
+        self.apiService = apiService
+        self.favouritesService = favouritesService
+        self.repository = AdDashboardRepository(apiService: apiService, favouritesService: favouritesService)
         fetchAds()
     }
     
@@ -37,21 +39,8 @@ class AdDashboardViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func fetchAdsFromFile() {
-        FileManager.default.readFavouriteAds()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                if case .failure(let error) = completion {
-                    print("+ handle error", error)
-                }
-            }, receiveValue: { [weak self] localAdData in
-                
-            })
-            .store(in: &cancellables)
-    }
-    
-    func saveToFavourites(ad: LocalAdItem) {
-        FileManager.default.testWriteToLocalAdItem(newFavouriteAds: [ad])
+    func updateFavourites(ad: LocalAdItem) {
+        favouritesService.updateFavouriteAdItems(favouriteAds: [ad])
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion {
@@ -59,19 +48,6 @@ class AdDashboardViewModel: ObservableObject {
                 }
             }, receiveValue: { [weak self] saved in
                 print("+ localAdData saved", saved)
-            })
-            .store(in: &cancellables)
-    }
-    
-    func removeFromFavourites(ad: LocalAdItem) {
-        FileManager.default.removeFavouriteAdItem(adToRemove: ad)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                if case .failure(let error) = completion {
-                    print("+ handle error", error)
-                }
-            }, receiveValue: { [weak self] saved in
-                print("+ localAdData removed", saved)
             })
             .store(in: &cancellables)
     }

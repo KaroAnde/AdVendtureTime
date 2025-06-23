@@ -12,8 +12,7 @@ struct VendAdCardView: View {
     var title: String?
     var location: String?
     let priceValue: Int?
-    var isFavourite: Bool
-    var onToggleFavourites: () -> Void
+    @Binding var isFavourite: Bool
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -76,7 +75,7 @@ struct VendAdCardView: View {
             .background(.vendLightPink)
             .clipShape(.rect(bottomLeadingRadius: 8))
             .onTapGesture {
-                onToggleFavourites()
+                isFavourite.toggle()
             }
     }
     
@@ -107,10 +106,10 @@ struct VendAdCardView: View {
 
 struct VendAdCardPreviewHelper: View {
     @ObservedObject var viewModel: AdDashboardViewModel
-    
+    @State var isFavourite: Bool = false
     init(mockType: MockAdDataType) {
         let mockData = MockAdData(mockType: mockType)
-        self.viewModel = AdDashboardViewModel(service: mockData.mockService())
+        self.viewModel = AdDashboardViewModel(apiService: mockData.mockService())
     }
     
     var body: some View {
@@ -119,7 +118,7 @@ struct VendAdCardPreviewHelper: View {
             title: viewModel.ads.first?.title,
             location: viewModel.ads.first?.location,
             priceValue: viewModel.ads.first?.priceValue,
-            isFavourite: true, onToggleFavourites: {})
+            isFavourite: $isFavourite)
     }
 }
 

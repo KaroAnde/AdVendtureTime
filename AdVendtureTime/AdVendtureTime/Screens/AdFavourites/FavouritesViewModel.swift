@@ -12,8 +12,12 @@ import SwiftUI
 class FavouritesViewModel: ObservableObject {
     @Published var favouriteAds: [LocalAdItem] = []
     var cancellables = Set<AnyCancellable>()
+    var favouritesService: FavouritesPersistenceService
+    var repository: AdDashboardRepository
     
-    init() {
+    init(service: FavouritesPersistenceService = FavouritesPersistenceService.shared){
+        self.favouritesService = service
+        self.repository = AdDashboardRepository(favouritesService: service)
         fetchAdsFromFile()
     }
     
@@ -22,7 +26,7 @@ class FavouritesViewModel: ObservableObject {
     }
     
     func fetchAdsFromFile() {
-        FileManager.default.readFavouriteAds()
+        repository.fetchAdsFromFile()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion {

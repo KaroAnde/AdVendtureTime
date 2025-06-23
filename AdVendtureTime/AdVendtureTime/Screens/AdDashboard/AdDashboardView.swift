@@ -15,20 +15,16 @@ struct AdDashboardView: View {
                        GridItem(.flexible(), spacing: 16)]
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
-                ForEach(viewModel.ads, id: \.id) { ad in
+                ForEach(viewModel.ads.indices, id: \.self) { i in
+                    let ad = viewModel.ads[i]
                     VendAdCardView(imageURL: ad.fullImageURL,
                                    title: ad.title,
                                    location: ad.location,
                                    priceValue: ad.priceValue,
-                                   isFavourite: ad.isFavourite,
-                                   onToggleFavourites: {
-                        ad.isFavourite = !ad.isFavourite
-                        if ad.isFavourite {
-                            viewModel.saveToFavourites(ad: ad)
-                        } else {
-                            viewModel.removeFromFavourites(ad: ad)
-                        }
-                    })
+                                   isFavourite: $viewModel.ads[i].isFavourite)
+                    .onChange(of: viewModel.ads[i].isFavourite) { newValue in
+                        viewModel.updateFavourites(ad: ad)
+                    }
                 }
             }.padding(16)
         }

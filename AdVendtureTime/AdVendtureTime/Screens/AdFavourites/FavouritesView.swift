@@ -16,8 +16,12 @@ struct FavouritesView: View {
         }
         ScrollView {
             LazyVStack {
-                ForEach(viewModel.favouriteAds, id: \.id) { favouriteAd in
-                    VendAdCardView(imageURL: favouriteAd.fullImageURL, title: favouriteAd.title, priceValue: favouriteAd.priceValue, isFavourite: favouriteAd.isFavourite, onToggleFavourites: {})
+                ForEach($viewModel.favouriteAds, id: \.id) { favouriteAd in
+                    VendAdCardView(imageURL: favouriteAd.fullImageURL.wrappedValue,
+                                   title: favouriteAd.title.wrappedValue,
+                                   location: favouriteAd.location.wrappedValue,
+                                   priceValue: favouriteAd.priceValue.wrappedValue,
+                                   isFavourite: favouriteAd.isFavourite)
                 }
             }.padding(16)
         }
