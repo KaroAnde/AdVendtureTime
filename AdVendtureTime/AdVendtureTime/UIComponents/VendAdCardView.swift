@@ -13,6 +13,7 @@ struct VendAdCardView: View {
     var location: String?
     let priceValue: Int?
     @Binding var isFavourite: Bool
+    @Binding var isLoading: Bool
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -95,12 +96,18 @@ struct VendAdCardView: View {
     
     @ViewBuilder
     var emptyImageView: some View {
-        Image(systemName: "photo.badge.exclamationmark")
-            .resizable()
-            .scaledToFit()
-            .padding()
-            .foregroundStyle(.vendRust)
-            .opacity(0.5)
+        ZStack {
+            if isLoading {
+                ProgressView()
+                .scaleEffect(4.0)
+            }
+            Image(systemName: "photo.badge.exclamationmark")
+                .resizable()
+                .scaledToFit()
+                .padding()
+                .foregroundStyle(.vendRust)
+                .opacity(0.5)
+        }
     }
 }
 
@@ -118,7 +125,7 @@ struct VendAdCardPreviewHelper: View {
             title: viewModel.ads.first?.title,
             location: viewModel.ads.first?.location,
             priceValue: viewModel.ads.first?.priceValue,
-            isFavourite: $isFavourite)
+            isFavourite: $isFavourite, isLoading: $viewModel.isLoading)
     }
 }
 

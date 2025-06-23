@@ -14,6 +14,7 @@ class AdDashboardViewModel: ObservableObject {
     var apiService: APIService
     var favouritesService: FavouritesPersistenceService
     var repository: VendAdRepository
+    @Published var isLoading: Bool = false
     
     init(apiService: APIService = APIService.shared, favouritesService: FavouritesPersistenceService = FavouritesPersistenceService.shared) {
         self.apiService = apiService
@@ -27,12 +28,14 @@ class AdDashboardViewModel: ObservableObject {
     }
     
     func fetchAds() {
+        self.isLoading = true
         repository.getAds()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion {
-                    print("+ handle error", error)
+                    self.isLoading = false
                 }
+                self.isLoading = false
             }, receiveValue: { [weak self] adData in
                 self?.ads = adData
             })
@@ -40,12 +43,14 @@ class AdDashboardViewModel: ObservableObject {
     }
     
     func updateFavourites(ad: AdItem) {
+        self.isLoading = true
         favouritesService.updateFavouriteAdItems(favouriteAds: [ad])
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion {
-                    print("+ handle error", error)
+                    self.isLoading = false
                 }
+                self.isLoading = false
             }, receiveValue: {_ in })
             .store(in: &cancellables)
     }

@@ -14,6 +14,7 @@ class FavouritesViewModel: ObservableObject {
     var cancellables = Set<AnyCancellable>()
     var favouritesService: FavouritesPersistenceService
     var repository: VendAdRepository
+    @Published var isLoading: Bool = false
     
     init(service: FavouritesPersistenceService = FavouritesPersistenceService.shared){
         self.favouritesService = service
@@ -26,12 +27,14 @@ class FavouritesViewModel: ObservableObject {
     }
     
     func fetchAdsFromFile() {
+        self.isLoading = true
         repository.fetchAdsFromFile()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion {
-                    print("+ handle error", error)
+                    self.isLoading = false
                 }
+                self.isLoading = false
             }, receiveValue: { [weak self] localAdData in
                 self?.favouriteAds = localAdData
             })

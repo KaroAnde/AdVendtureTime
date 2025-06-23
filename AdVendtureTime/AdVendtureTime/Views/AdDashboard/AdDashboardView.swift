@@ -21,7 +21,8 @@ struct AdDashboardView: View {
                                    title: ad.title,
                                    location: ad.location,
                                    priceValue: ad.priceValue,
-                                   isFavourite: $viewModel.ads[i].isFavourite)
+                                   isFavourite: $viewModel.ads[i].isFavourite,
+                                   isLoading: $viewModel.isLoading)
                     .onChange(of: viewModel.ads[i].isFavourite) { _, newValue in
                         viewModel.updateFavourites(ad: ad)
                     }
