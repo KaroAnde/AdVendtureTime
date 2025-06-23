@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Combine
-import CoreHaptics
 
 class AdDashboardViewModel: ObservableObject {
     @Published var ads: [AdItem] = []
@@ -34,7 +33,6 @@ class AdDashboardViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 if case .failure(_) = completion {
-                    self.isLoading = false
                     Haptics.shared.notify(.error)
                 }
                 self.isLoading = false
@@ -51,7 +49,6 @@ class AdDashboardViewModel: ObservableObject {
             .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion {
                     self.isLoading = false
-                    print("+ se her", error)
                 }
                 self.isLoading = false
             }, receiveValue: {_ in})

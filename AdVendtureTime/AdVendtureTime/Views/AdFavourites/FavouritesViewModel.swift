@@ -32,7 +32,6 @@ class FavouritesViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 if case .failure(_) = completion {
-                    self.isLoading = false
                     Haptics.shared.notify(.error)
                 }
                 self.isLoading = false
@@ -48,7 +47,6 @@ class FavouritesViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 if case .failure(_) = completion {
-                    self.isLoading = false
                     Haptics.shared.notify(.error)
                 }
                 self.isLoading = false
