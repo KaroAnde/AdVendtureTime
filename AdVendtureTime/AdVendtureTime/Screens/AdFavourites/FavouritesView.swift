@@ -11,13 +11,13 @@ struct FavouritesView: View {
     @ObservedObject var viewModel: FavouritesViewModel = FavouritesViewModel()
     var body: some View {
         if viewModel.favouriteAds.isEmpty {
-            Text ("No favourites yet")
+            emptyView
         }
         ScrollView {
             LazyVStack {
-                ForEach(viewModel.favouriteAds.indices, id: \.self) { i in
+                ForEach(viewModel.favouriteAds.indices.reversed(), id: \.self) { i in
                     let favouriteAd = viewModel.favouriteAds[i]
-                    VendAdCardView(imageURL: favouriteAd.fullImageURL,
+                    VendAdCardView(imageURL: favouriteAd.localImageFileName,
                                    title: favouriteAd.title,
                                    location: favouriteAd.location,
                                    priceValue: favouriteAd.priceValue,
@@ -28,6 +28,20 @@ struct FavouritesView: View {
                 }
             }.padding(16)
         }
+    }
+    
+    @ViewBuilder
+    var emptyView: some View {
+        VStack {
+            Spacer()
+            Image(systemName:"star.slash")
+                .resizable()
+                .frame(width: 50, height: 50)
+                .foregroundStyle(.vendRust)
+            Text("No favourites yet")
+                .titleStyle()
+        }
+        .padding()
     }
 }
 

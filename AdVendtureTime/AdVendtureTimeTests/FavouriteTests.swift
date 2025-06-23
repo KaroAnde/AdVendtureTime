@@ -12,7 +12,7 @@ import Combine
 final class FavouriteTests: XCTestCase {
     var mockService: MockFavouritesService = MockFavouritesService(items: AdItem.mockList)
     var cancellables = Set<AnyCancellable>()
-
+    
     lazy var repository: VendAdRepository = {
         VendAdRepository(favouritesService: mockService)
     }()
@@ -29,16 +29,15 @@ final class FavouriteTests: XCTestCase {
         mockService.readFromFavouriteAdItems()
             .sink(receiveCompletion: { _ in },
                   receiveValue: { items in
-                      result = items
+                result = items
                 expecation.fulfill()
-                  })
+            })
             .store(in: &cancellables)
-
+        
         wait(for: [expecation], timeout: 1)
-
-        // Assert
+        
         XCTAssertEqual(result?.count, 3)
         XCTAssertEqual(result?.map { $0.id }, ["1", "2", "3"])
     }
-
+    
 }

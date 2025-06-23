@@ -31,7 +31,8 @@ class VendAdRepository: VendAdRepositoryProtocol {
                                    priceValue: adItem.price?.value,
                                    shippingOption: adItem.shippingOption?.label,
                                    isFavourite: false,
-                                   fullImageURL: adItem.fullImageURL)
+                                   fullImageURL: adItem.fullImageURL,
+                                   localImageFileName: nil)
             }
         }
         
@@ -39,12 +40,16 @@ class VendAdRepository: VendAdRepositoryProtocol {
         
         return Publishers.CombineLatest(apiAds, favourites).map { remoteAds, savedFavourites in
             let favouriteIds = Set(savedFavourites.map { $0.id })
-            
-            return remoteAds.map { remote in
-                let updated = remote
-                updated.isFavourite = favouriteIds.contains(remote.id)
-                return updated
+            let savedByID = Dictionary(uniqueKeysWithValues: savedFavourites.map {($0.id, $0.localImageFileName)})
+            if !favouriteIds.isEmpty {
+                return remoteAds.map { remote in
+                    let updated = remote
+                    updated.isFavourite = favouriteIds.contains(remote.id)
+                    updated.localImageFileName = savedByID[remote.id] ?? nil
+                    return updated
+                }
             }
+            return remoteAds
         }.eraseToAnyPublisher()
     }
     

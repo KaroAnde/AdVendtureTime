@@ -38,7 +38,10 @@ struct VendCustomTabbar: View {
                 .foregroundStyle(.vendRust)
                 .opacity(0.9)
             HStack {
-                    Button(action: { selectedTab = 0}) {
+                    Button(action: {
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                            selectedTab = 0
+                        }}) {
                         VStack {
                             Image(systemName: "house")
                                 .frame(width: 20, height: 20)
@@ -50,8 +53,10 @@ struct VendCustomTabbar: View {
                     .background(Capsule().fill(selectedTab == 0 ? .vendDarkerPink : .vendRust))
                     .padding()
                 
-                
-                    Button(action: { selectedTab = 1}) {
+                    Button(action: {
+                        withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+                            selectedTab = 1
+                        }}) {
                         VStack {
                             Image(systemName: "star")
                                 .frame(width: 20, height: 20)

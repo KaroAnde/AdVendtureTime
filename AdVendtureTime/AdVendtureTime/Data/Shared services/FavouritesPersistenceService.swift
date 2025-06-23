@@ -18,9 +18,13 @@ final class FavouritesPersistenceService: FavouritesPersistenceServiceProtocol {
     private let fileManager: FileManager = FileManager.default
     
     private let fileName = "VendAdItem.json"
+    private let imagesFolderName = "VendAdImages"
     
     func readFromFavouriteAdItems() -> AnyPublisher<[AdItem],Error> {
         ioPublisher { fileUrl in
+            guard self.fileManager.fileExists(atPath: fileUrl.path()) else {
+                return []
+            }
             let data = try Data(contentsOf: fileUrl)
             return try JSONDecoder().decode([AdItem].self, from: data)
         }
@@ -28,7 +32,23 @@ final class FavouritesPersistenceService: FavouritesPersistenceServiceProtocol {
     
     func writeToFavouriteAdItems(items: [AdItem]) -> AnyPublisher<URL,Error> {
         ioPublisher { fileUrl in
-            let data = try JSONEncoder().encode(items)
+            let adImageFolder = try self.createImagesFolderURL()
+            
+            let itemAndImage: [AdItem] = try items.map { item in
+                let copy = item
+                
+                if copy.localImageFileName == nil, let fullImageURL = copy.fullImageURL {
+                    let data = try Data(contentsOf: fullImageURL)
+                    let imageFileName = "ad-\(copy.id).png"
+                    let destURL  = adImageFolder.appendingPathComponent(imageFileName)
+                    try data.write(to: destURL, options: .atomic)
+                    copy.localImageFileName = destURL.absoluteURL
+
+                }
+                return copy
+            }
+            
+            let data = try JSONEncoder().encode(itemAndImage)
             try data.write(to: fileUrl, options: .atomic)
             return fileUrl
         }
@@ -89,6 +109,22 @@ final class FavouritesPersistenceService: FavouritesPersistenceServiceProtocol {
             create: false
         )
         return docs.appendingPathComponent(self.fileName)
+    }
+    
+    private func createImagesFolderURL() throws -> URL {
+        let docs = try fileManager.url(
+            for: .documentDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: true
+        )
+        let imagesFolder = docs.appendingPathComponent(imagesFolderName, isDirectory: true)
+        try fileManager.createDirectory(
+            at: imagesFolder,
+            withIntermediateDirectories: true,
+            attributes: nil
+        )
+        return imagesFolder
     }
 }
 
