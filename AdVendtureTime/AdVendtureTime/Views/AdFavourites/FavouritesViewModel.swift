@@ -31,8 +31,9 @@ class FavouritesViewModel: ObservableObject {
         repository.fetchAdsFromFile()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
-                if case .failure(let error) = completion {
+                if case .failure(_) = completion {
                     self.isLoading = false
+                    Haptics.shared.notify(.error)
                 }
                 self.isLoading = false
             }, receiveValue: { [weak self] localAdData in
@@ -46,8 +47,9 @@ class FavouritesViewModel: ObservableObject {
         repository.updateAndReadFavouriteItems(favouriteAd: adItem)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
-                if case .failure(let error) = completion {
+                if case .failure(_) = completion {
                     self.isLoading = false
+                    Haptics.shared.notify(.error)
                 }
                 self.isLoading = false
             }, receiveValue: { items  in

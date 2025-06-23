@@ -77,6 +77,7 @@ struct VendAdCardView: View {
             .clipShape(.rect(bottomLeadingRadius: 8))
             .onTapGesture {
                 isFavourite.toggle()
+                Haptics.shared.play(.light)
             }
     }
     

@@ -35,12 +35,14 @@ final class FavouritesPersistenceService: FavouritesPersistenceServiceProtocol {
             let adImageFolder = try self.createImagesFolderURL()
             
             let itemAndImage: [AdItem] = try items.map { item in
-                if item.localImageFileName == nil, let fullImageURL = item.fullImageURL {
-                    let data = try Data(contentsOf: fullImageURL)
-                    let imageFileName = "ad-\(item.id).png"
-                    let destinationURL  = adImageFolder.appendingPathComponent(imageFileName)
-                    try data.write(to: destinationURL, options: .atomic)
-                    item.localImageFileName = imageFileName
+                if item.localImageFileName == nil,
+                   let remoteURL = item.fullImageURL,
+                   let imageData  = try? Data(contentsOf: remoteURL)
+                {
+                    let filename = "ad-\(item.id).png"
+                    let destinationURL  = adImageFolder.appendingPathComponent(filename)
+                    try imageData.write(to: destinationURL, options: .atomic)
+                    item.localImageFileName = filename
                 }
                 return item
             }

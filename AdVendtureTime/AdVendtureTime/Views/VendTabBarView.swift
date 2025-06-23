@@ -24,7 +24,7 @@ struct VendCustomTabbar: View {
                 tabContent
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .overlay(alignment: .bottom) {
+            .overlay(alignment: .centerLastTextBaseline) {
                 tabBar
             }
     }
