@@ -12,7 +12,8 @@ struct VendAdCardView: View {
     var title: String?
     var location: String?
     let priceValue: Int?
-    var isFavourite: Bool = false
+    @Binding var isFavourite: Bool
+    @Binding var isLoading: Bool
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -75,7 +76,8 @@ struct VendAdCardView: View {
             .background(.vendLightPink)
             .clipShape(.rect(bottomLeadingRadius: 8))
             .onTapGesture {
-                print("save to favourites")
+                isFavourite.toggle()
+                Haptics.shared.play(.light)
             }
     }
     
@@ -95,21 +97,27 @@ struct VendAdCardView: View {
     
     @ViewBuilder
     var emptyImageView: some View {
-        Image(systemName: "photo.badge.exclamationmark")
-            .resizable()
-            .scaledToFit()
-            .padding()
-            .foregroundStyle(.vendRust)
-            .opacity(0.5)
+        ZStack {
+            if isLoading {
+                ProgressView()
+                .scaleEffect(4.0)
+            }
+            Image(systemName: "photo.badge.exclamationmark")
+                .resizable()
+                .scaledToFit()
+                .padding()
+                .foregroundStyle(.vendRust)
+                .opacity(0.5)
+        }
     }
 }
 
 struct VendAdCardPreviewHelper: View {
     @ObservedObject var viewModel: AdDashboardViewModel
-    
+    @State var isFavourite: Bool = false
     init(mockType: MockAdDataType) {
         let mockData = MockAdData(mockType: mockType)
-        self.viewModel = AdDashboardViewModel(service: mockData.mockService())
+        self.viewModel = AdDashboardViewModel(apiService: mockData.mockService())
     }
     
     var body: some View {
@@ -117,10 +125,11 @@ struct VendAdCardPreviewHelper: View {
             imageURL: viewModel.ads.first?.fullImageURL,
             title: viewModel.ads.first?.title,
             location: viewModel.ads.first?.location,
-            priceValue: viewModel.ads.first?.price?.value,
-            isFavourite: false)
+            priceValue: viewModel.ads.first?.priceValue,
+            isFavourite: $isFavourite, isLoading: $viewModel.isLoading)
     }
 }
+
 
 #Preview {
     VendAdCardPreviewHelper(mockType: .nilValuesMock)

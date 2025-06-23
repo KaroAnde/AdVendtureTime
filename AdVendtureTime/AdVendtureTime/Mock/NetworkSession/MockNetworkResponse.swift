@@ -40,8 +40,6 @@ struct MockAdData {
         mockSession.result = .success(data: data, response: response)
         return APIService(session: mockSession)
     }
-
-    
 }
 
 enum MockAdDataType {

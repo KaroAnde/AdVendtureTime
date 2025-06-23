@@ -5,7 +5,7 @@
 //  Created by Karoline Skumsrud Andersen on 20/06/2025.
 //
 
-struct AdImage: Decodable {
+struct AdImage: Codable {
     var url: String?
     var height: Int?
     var width: Int?
