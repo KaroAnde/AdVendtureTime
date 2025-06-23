@@ -15,12 +15,16 @@ struct FavouritesView: View {
         }
         ScrollView {
             LazyVStack {
-                ForEach($viewModel.favouriteAds, id: \.id) { favouriteAd in
-                    VendAdCardView(imageURL: favouriteAd.fullImageURL.wrappedValue,
-                                   title: favouriteAd.title.wrappedValue,
-                                   location: favouriteAd.location.wrappedValue,
-                                   priceValue: favouriteAd.priceValue.wrappedValue,
-                                   isFavourite: favouriteAd.isFavourite)
+                ForEach(viewModel.favouriteAds.indices, id: \.self) { i in
+                    let favouriteAd = viewModel.favouriteAds[i]
+                    VendAdCardView(imageURL: favouriteAd.fullImageURL,
+                                   title: favouriteAd.title,
+                                   location: favouriteAd.location,
+                                   priceValue: favouriteAd.priceValue,
+                                   isFavourite: $viewModel.favouriteAds[i].isFavourite)
+                    .onChange(of: viewModel.favouriteAds[i].isFavourite) { newValue in
+                        viewModel.updateFavourites(adItem: favouriteAd)
+                    }
                 }
             }.padding(16)
         }

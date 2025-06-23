@@ -38,4 +38,16 @@ class FavouritesViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
+    func updateFavourites(adItem: AdItem) {
+        repository.updateAndReadFavouriteItems(favouriteAd: adItem)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                if case .failure(let error) = completion {
+                    print("+ handle error", error)
+                }
+            }, receiveValue: { items  in
+                self.favouriteAds = items
+            })
+            .store(in: &cancellables)
+    }
 }
