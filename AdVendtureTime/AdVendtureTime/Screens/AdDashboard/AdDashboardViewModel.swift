@@ -46,9 +46,7 @@ class AdDashboardViewModel: ObservableObject {
                 if case .failure(let error) = completion {
                     print("+ handle error", error)
                 }
-            }, receiveValue: { [weak self] saved in
-                print("+ localAdData saved", saved)
-            })
+            }, receiveValue: {_ in })
             .store(in: &cancellables)
     }
 }
