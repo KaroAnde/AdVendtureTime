@@ -12,7 +12,8 @@ struct VendAdCardView: View {
     var title: String?
     var location: String?
     let priceValue: Int?
-    var isFavourite: Bool = false
+    var isFavourite: Bool
+    var onToggleFavourites: () -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -75,7 +76,7 @@ struct VendAdCardView: View {
             .background(.vendLightPink)
             .clipShape(.rect(bottomLeadingRadius: 8))
             .onTapGesture {
-                print("save to favourites")
+                onToggleFavourites()
             }
     }
     
@@ -117,10 +118,11 @@ struct VendAdCardPreviewHelper: View {
             imageURL: viewModel.ads.first?.fullImageURL,
             title: viewModel.ads.first?.title,
             location: viewModel.ads.first?.location,
-            priceValue: viewModel.ads.first?.price?.value,
-            isFavourite: false)
+            priceValue: viewModel.ads.first?.priceValue,
+            isFavourite: true, onToggleFavourites: {})
     }
 }
+
 
 #Preview {
     VendAdCardPreviewHelper(mockType: .nilValuesMock)

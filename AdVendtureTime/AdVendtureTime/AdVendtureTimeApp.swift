@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct AdVendtureTimeApp: App {
     var body: some Scene {
         WindowGroup {
-            AdDashboardView()
+            VendTabBarView()
         }
     }
 }

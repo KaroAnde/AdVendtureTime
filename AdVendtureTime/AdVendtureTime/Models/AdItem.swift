@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct AdItem: Decodable, Identifiable {
+struct AdItem: Codable, Identifiable {
     var title: String?
     var id: String
     var url: String?
@@ -20,6 +20,7 @@ struct AdItem: Decodable, Identifiable {
     var version: String?
     var favourite: AdFavourite?
     var shippingOption: AdShippingOption?
+    var isFavourite: Bool?
     
     var fullImageURL: URL? {
         guard let imageUrl = image?.url else { return nil }

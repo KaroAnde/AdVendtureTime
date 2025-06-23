@@ -5,7 +5,7 @@
 //  Created by Karoline Skumsrud Andersen on 20/06/2025.
 //
 
-struct AdFavourite: Decodable {
+struct AdFavourite: Codable {
     var itemId: String?
     var itemType: String?
 }
