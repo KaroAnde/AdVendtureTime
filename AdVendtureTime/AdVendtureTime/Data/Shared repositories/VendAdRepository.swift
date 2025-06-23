@@ -8,18 +8,18 @@
 import Combine
 import Foundation
 
-protocol AdDashboardRepositoryProtocol {
+protocol VendAdRepositoryProtocol {
     func getAds() -> AnyPublisher<[AdItem], Error>
     func updateAndReadFavouriteItems(favouriteAd: AdItem) -> AnyPublisher<[AdItem], Error>
     func updateFavourites(newFavouriteAd: AdItem) -> AnyPublisher<URL, Error>
     func fetchAdsFromFile() -> AnyPublisher<[AdItem], Error>
 }
 
-class VendAdRepository: AdDashboardRepositoryProtocol {
+class VendAdRepository: VendAdRepositoryProtocol {
     let apiService: APIService
-    let favouritesService: FavouritesPersistenceService
+    let favouritesService: FavouritesPersistenceServiceProtocol
     
-    init(apiService: APIService = APIService.shared, favouritesService: FavouritesPersistenceService) {
+    init(apiService: APIService = APIService.shared, favouritesService: FavouritesPersistenceServiceProtocol = FavouritesPersistenceService()) {
         self.apiService = apiService
         self.favouritesService = favouritesService
     }
