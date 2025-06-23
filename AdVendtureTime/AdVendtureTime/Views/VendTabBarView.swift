@@ -34,7 +34,7 @@ struct VendCustomTabbar: View {
         ZStack {
             Capsule()
                 .rotationEffect(.degrees(180))
-                .frame(width: 350, height: 60)
+                .frame(width: capsuleWidth, height: capsuleHeight)
                 .foregroundStyle(.vendRust)
                 .opacity(0.9)
             HStack {

@@ -18,4 +18,12 @@ extension VendCustomTabbar {
     var iconSize: CGFloat {
         return 20
     }
+    
+    var capsuleWidth: CGFloat {
+        return 350
+    }
+    
+    var capsuleHeight: CGFloat {
+        return 60
+    }
 }
