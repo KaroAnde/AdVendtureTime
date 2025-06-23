@@ -37,6 +37,8 @@ class VendAdRepository: VendAdRepositoryProtocol {
         }
         
         let favourites = self.fetchAdsFromFile()
+            .prepend([])
+            .eraseToAnyPublisher()
         
         return Publishers.CombineLatest(apiAds, favourites).map { remoteAds, savedFavourites in
             let favouriteIds = Set(savedFavourites.map { $0.id })
