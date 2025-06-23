@@ -4,10 +4,8 @@
 <dict>
 	<key>UILaunchScreen</key>
 	<dict>
-		<key>UIImageName</key>
-		<string>splashScreenIcon</string>
-		<key>UIImageRespectsSafeAreaInsets</key>
-		<true/>
+		<key>UIColorName</key>
+		<string>vendRust</string>
 	</dict>
 </dict>
 </plist>
