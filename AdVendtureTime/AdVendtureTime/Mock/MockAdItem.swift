@@ -20,7 +20,7 @@ extension AdItem {
         shippingOption: String? = "Free",
         isFavourite: Bool = false,
         fullImageURL: URL? = URL(string: "https://example.com/image.png"),
-        localImageFileName: URL? = URL(string: "https://example.com/image.png")
+        localImageFileName: String? = "https://example.com/image.png"
     ) -> AdItem {
         AdItem(
             title: title,

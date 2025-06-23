@@ -40,35 +40,46 @@ class VendAdRepository: VendAdRepositoryProtocol {
         
         return Publishers.CombineLatest(apiAds, favourites).map { remoteAds, savedFavourites in
             let favouriteIds = Set(savedFavourites.map { $0.id })
-            let savedByID = Dictionary(uniqueKeysWithValues: savedFavourites.map {($0.id, $0.localImageFileName)})
-            if !favouriteIds.isEmpty {
                 return remoteAds.map { remote in
                     let updated = remote
                     updated.isFavourite = favouriteIds.contains(remote.id)
-                    updated.localImageFileName = savedByID[remote.id] ?? nil
                     return updated
                 }
-            }
-            return remoteAds
         }.eraseToAnyPublisher()
     }
     
     func updateFavourites(newFavouriteAd: AdItem) -> AnyPublisher<URL, Error>{
-        favouritesService.updateFavouriteAdItems(favouriteAds: [newFavouriteAd])
+        favouritesService
+            .updateFavouriteAdItems(favouriteAds: [newFavouriteAd])
             .eraseToAnyPublisher()
     }
     
     func fetchAdsFromFile() -> AnyPublisher<[AdItem], Error> {
         favouritesService
             .readFromFavouriteAdItems()
+            .map { items in
+                let documentsURL = FileManager.default
+                    .urls(for: .documentDirectory, in: .userDomainMask)
+                    .first!
+                let imagesFolder = documentsURL
+                    .appendingPathComponent("VendAdImages", isDirectory: true)
+
+                return items.map { item in
+                    if let filename = item.localImageFileName {
+                        let localURL = imagesFolder.appendingPathComponent(filename)
+                        item.fullImageURL = localURL
+                    }
+                    return item
+                }
+            }
             .eraseToAnyPublisher()
     }
-    
     func updateAndReadFavouriteItems(favouriteAd: AdItem) -> AnyPublisher<[AdItem], any Error> {
         favouritesService
             .updateFavouriteAdItems(favouriteAds: [favouriteAd])
             .flatMap {_ in
-                self.favouritesService.readFromFavouriteAdItems()
+                self.favouritesService
+                    .readFromFavouriteAdItems()
             }
             .eraseToAnyPublisher()
     }

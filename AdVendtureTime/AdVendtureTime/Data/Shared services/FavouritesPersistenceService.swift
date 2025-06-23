@@ -22,7 +22,7 @@ final class FavouritesPersistenceService: FavouritesPersistenceServiceProtocol {
     
     func readFromFavouriteAdItems() -> AnyPublisher<[AdItem],Error> {
         ioPublisher { fileUrl in
-            guard self.fileManager.fileExists(atPath: fileUrl.path()) else {
+            guard self.fileManager.fileExists(atPath: fileUrl.path) else {
                 return []
             }
             let data = try Data(contentsOf: fileUrl)
@@ -35,16 +35,14 @@ final class FavouritesPersistenceService: FavouritesPersistenceServiceProtocol {
             let adImageFolder = try self.createImagesFolderURL()
             
             let itemAndImage: [AdItem] = try items.map { item in
-                let copy = item
-                
-                if copy.localImageFileName == nil, let fullImageURL = copy.fullImageURL {
+                if item.localImageFileName == nil, let fullImageURL = item.fullImageURL {
                     let data = try Data(contentsOf: fullImageURL)
-                    let imageFileName = "ad-\(copy.id).png"
+                    let imageFileName = "ad-\(item.id).png"
                     let destinationURL  = adImageFolder.appendingPathComponent(imageFileName)
                     try data.write(to: destinationURL, options: .atomic)
-                    copy.localImageFileName = destinationURL.absoluteURL
+                    item.localImageFileName = imageFileName
                 }
-                return copy
+                return item
             }
             let data = try JSONEncoder().encode(itemAndImage)
             try data.write(to: fileUrl, options: .atomic)

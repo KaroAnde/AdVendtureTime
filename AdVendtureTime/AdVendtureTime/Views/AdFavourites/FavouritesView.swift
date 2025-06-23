@@ -17,7 +17,7 @@ struct FavouritesView: View {
             LazyVStack {
                 ForEach(viewModel.favouriteAds.indices.reversed(), id: \.self) { i in
                     let favouriteAd = viewModel.favouriteAds[i]
-                    VendAdCardView(imageURL: favouriteAd.localImageFileName,
+                    VendAdCardView(imageURL: favouriteAd.fullImageURL,
                                    title: favouriteAd.title,
                                    location: favouriteAd.location,
                                    priceValue: favouriteAd.priceValue,

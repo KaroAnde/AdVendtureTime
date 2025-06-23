@@ -42,12 +42,14 @@ class FavouritesViewModel: ObservableObject {
     }
     
     func updateFavourites(adItem: AdItem) {
+        self.isLoading = true
         repository.updateAndReadFavouriteItems(favouriteAd: adItem)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion {
-                    print("+ handle error", error)
+                    self.isLoading = false
                 }
+                self.isLoading = false
             }, receiveValue: { items  in
                 self.favouriteAds = items
             })

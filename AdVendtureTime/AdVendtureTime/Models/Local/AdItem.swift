@@ -20,7 +20,7 @@ class AdItem: Codable {
     var shippingOption: String?
     var isFavourite: Bool
     var fullImageURL: URL?
-    var localImageFileName: URL?
+    var localImageFileName: String?
     
     init(title: String?,
          id: String,
@@ -34,7 +34,7 @@ class AdItem: Codable {
          shippingOption: String?,
          isFavourite: Bool = false,
          fullImageURL: URL?,
-         localImageFileName: URL?) {
+         localImageFileName: String?) {
         self.title = title
         self.id = id
         self.url = url
@@ -47,11 +47,12 @@ class AdItem: Codable {
         self.shippingOption = shippingOption
         self.isFavourite = isFavourite
         self.fullImageURL = fullImageURL
+        self.localImageFileName = localImageFileName
     }
 }
 
 extension AdItem {
-    convenience init(item: AdItemResponse, priceValue: Int?, shippingOption: String?, isFavourite: Bool = false, fullImageURL: URL?, localImageFileName: URL?) {
+    convenience init(item: AdItemResponse, priceValue: Int?, shippingOption: String?, isFavourite: Bool = false, fullImageURL: URL?, localImageFileName: String?) {
         self.init(
             title: item.title,
             id: item.id,
