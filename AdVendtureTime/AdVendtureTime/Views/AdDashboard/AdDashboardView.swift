@@ -9,12 +9,13 @@ import SwiftUI
 
 struct AdDashboardView: View {
     @ObservedObject var viewModel = AdDashboardViewModel()
+ 
     
     var body: some View {
-        let columns = [GridItem(.flexible(), spacing: 16),
-                       GridItem(.flexible(), spacing: 16)]
+        let columns = [GridItem(.flexible(), spacing: spacing),
+                       GridItem(.flexible(), spacing: spacing)]
         ScrollView {
-            LazyVGrid(columns: columns, spacing: 16) {
+            LazyVGrid(columns: columns, spacing: spacing) {
                 ForEach(viewModel.ads.indices, id: \.self) { i in
                     let ad = viewModel.ads[i]
                     VendAdCardView(imageURL: ad.fullImageURL,
@@ -27,7 +28,7 @@ struct AdDashboardView: View {
                         viewModel.updateFavourites(ad: ad)
                     }
                 }
-            }.padding(16)
+            }.padding(padding)
         }
     }
 }

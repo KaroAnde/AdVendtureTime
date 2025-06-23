@@ -31,10 +31,6 @@ struct VendCustomTabbar: View {
     
     @ViewBuilder
     var tabBar: some View {
-        let width: CGFloat = 150
-        let height: CGFloat = 55
-        let iconSize: CGFloat = 20
-        
         ZStack {
             Capsule()
                 .rotationEffect(.degrees(180))
@@ -48,7 +44,7 @@ struct VendCustomTabbar: View {
                     Text("Home")
                 }
                 .foregroundStyle(selectedTab == 0 ? .vendRust : .vendDarkerPink)
-                .frame(width: width, height: height)
+                .frame(width: buttonWidth, height: buttonHeight)
                 .background(Capsule().fill(selectedTab == 0 ? .vendDarkerPink : .vendRust))
                 .padding()
                 .onTapGesture {
@@ -61,7 +57,7 @@ struct VendCustomTabbar: View {
                     Text("Favourites")
                 }
                 .foregroundStyle(selectedTab == 1 ? .vendRust : .vendDarkerPink)
-                .frame(width: width, height: height)
+                .frame(width: buttonWidth, height: buttonHeight)
                 .background(Capsule().fill(selectedTab == 1 ? .vendDarkerPink : .vendRust))
                 .padding()
                 .onTapGesture {

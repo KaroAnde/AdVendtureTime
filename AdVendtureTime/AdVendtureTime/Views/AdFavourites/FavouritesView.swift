@@ -32,11 +32,12 @@ struct FavouritesView: View {
     
     @ViewBuilder
     var emptyView: some View {
+        var imageSize: CGFloat = 50
         VStack {
             Spacer()
             Image(systemName:"star.slash")
                 .resizable()
-                .frame(width: 50, height: 50)
+                .frame(width: imageSize, height: imageSize)
                 .foregroundStyle(.vendRust)
             Text("No favourites yet")
                 .titleStyle()
