@@ -40,14 +40,12 @@ final class FavouritesPersistenceService: FavouritesPersistenceServiceProtocol {
                 if copy.localImageFileName == nil, let fullImageURL = copy.fullImageURL {
                     let data = try Data(contentsOf: fullImageURL)
                     let imageFileName = "ad-\(copy.id).png"
-                    let destURL  = adImageFolder.appendingPathComponent(imageFileName)
-                    try data.write(to: destURL, options: .atomic)
-                    copy.localImageFileName = destURL.absoluteURL
-
+                    let destinationURL  = adImageFolder.appendingPathComponent(imageFileName)
+                    try data.write(to: destinationURL, options: .atomic)
+                    copy.localImageFileName = destinationURL.absoluteURL
                 }
                 return copy
             }
-            
             let data = try JSONEncoder().encode(itemAndImage)
             try data.write(to: fileUrl, options: .atomic)
             return fileUrl

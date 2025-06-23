@@ -20,7 +20,6 @@ struct AdItemResponse: Codable, Identifiable {
     var version: String?
     var favourite: AdFavourite?
     var shippingOption: AdShippingOption?
-    var isFavourite: Bool?
     
     var fullImageURL: URL? {
         guard let imageUrl = image?.url else { return nil }

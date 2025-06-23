@@ -25,14 +25,14 @@ class VendAdRepository: VendAdRepositoryProtocol {
     }
     
     func getAds() -> AnyPublisher<[AdItem], Error> {
-       let apiAds = apiService.fetchAds().map { ads in
+        let apiAds = apiService.fetchAds().map { ads in
             ads.items.map { adItem in
-                            AdItem(item: adItem,
-                                   priceValue: adItem.price?.value,
-                                   shippingOption: adItem.shippingOption?.label,
-                                   isFavourite: false,
-                                   fullImageURL: adItem.fullImageURL,
-                                   localImageFileName: nil)
+                AdItem(item: adItem,
+                       priceValue: adItem.price?.value,
+                       shippingOption: adItem.shippingOption?.label,
+                       isFavourite: false,
+                       fullImageURL: adItem.fullImageURL,
+                       localImageFileName: nil)
             }
         }
         

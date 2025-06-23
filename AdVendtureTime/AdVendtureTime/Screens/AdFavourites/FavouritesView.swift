@@ -22,7 +22,7 @@ struct FavouritesView: View {
                                    location: favouriteAd.location,
                                    priceValue: favouriteAd.priceValue,
                                    isFavourite: $viewModel.favouriteAds[i].isFavourite)
-                    .onChange(of: viewModel.favouriteAds[i].isFavourite) { newValue in
+                    .onChange(of: viewModel.favouriteAds[i].isFavourite) { _, newValue in
                         viewModel.updateFavourites(adItem: favouriteAd)
                     }
                 }
