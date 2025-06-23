@@ -20,17 +20,21 @@ struct VendTabBarView: View {
 struct VendCustomTabbar: View {
     @State private var selectedTab = 0
     var body: some View {
-            VStack(spacing: 0){
-                tabContent
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .overlay(alignment: .centerLastTextBaseline) {
-                tabBar
-            }
+        VStack(spacing: 0){
+            tabContent
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .overlay(alignment: .bottom) {
+            tabBar
+        }
     }
     
     @ViewBuilder
     var tabBar: some View {
+        let width: CGFloat = 150
+        let height: CGFloat = 55
+        let iconSize: CGFloat = 20
+        
         ZStack {
             Capsule()
                 .rotationEffect(.degrees(180))
@@ -38,37 +42,33 @@ struct VendCustomTabbar: View {
                 .foregroundStyle(.vendRust)
                 .opacity(0.9)
             HStack {
-                    Button(action: {
-                        withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
-                            selectedTab = 0
-                        }}) {
-                        VStack {
-                            Image(systemName: "house")
-                                .frame(width: 20, height: 20)
-                            Text("Home")
-                        }
-                        .foregroundStyle(selectedTab == 0 ? .vendRust : .vendDarkerPink)
-                    }
-                    .frame(width: 150, height: 55)
-                    .background(Capsule().fill(selectedTab == 0 ? .vendDarkerPink : .vendRust))
-                    .padding()
+                VStack {
+                    Image(systemName: "house")
+                        .frame(width: iconSize, height: iconSize)
+                    Text("Home")
+                }
+                .foregroundStyle(selectedTab == 0 ? .vendRust : .vendDarkerPink)
+                .frame(width: width, height: height)
+                .background(Capsule().fill(selectedTab == 0 ? .vendDarkerPink : .vendRust))
+                .padding()
+                .onTapGesture {
+                    selectedTab = 0
+                }
                 
-                    Button(action: {
-                        withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
-                            selectedTab = 1
-                        }}) {
-                        VStack {
-                            Image(systemName: "star")
-                                .frame(width: 20, height: 20)
-                            Text("Favourites")
-                        }.foregroundStyle(selectedTab == 1 ? .vendRust : .vendDarkerPink)
-                    }
-                    .frame(width: 150, height: 55)
-                    .background(Capsule().fill(selectedTab == 1 ? .vendDarkerPink : .vendRust))
-                    .padding()
+                VStack {
+                    Image(systemName: "star")
+                        .frame(width: iconSize, height: iconSize)
+                    Text("Favourites")
+                }
+                .foregroundStyle(selectedTab == 1 ? .vendRust : .vendDarkerPink)
+                .frame(width: width, height: height)
+                .background(Capsule().fill(selectedTab == 1 ? .vendDarkerPink : .vendRust))
+                .padding()
+                .onTapGesture {
+                    selectedTab = 1
+                }
             }
             .foregroundStyle(.vendLightPink)
-            
         }
     }
     

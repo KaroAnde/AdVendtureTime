@@ -62,7 +62,7 @@ class VendAdRepository: VendAdRepositoryProtocol {
             .map { items in
                 let documentsURL = FileManager.default
                     .urls(for: .documentDirectory, in: .userDomainMask)
-                    .first!
+                    .first! // TODO: Force unwrap
                 let imagesFolder = documentsURL
                     .appendingPathComponent("VendAdImages", isDirectory: true)
 
