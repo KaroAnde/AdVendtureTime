@@ -19,7 +19,16 @@ struct AdDashboardView: View {
                     VendAdCardView(imageURL: ad.fullImageURL,
                                    title: ad.title,
                                    location: ad.location,
-                                   priceValue: ad.price?.value)
+                                   priceValue: ad.priceValue,
+                                   isFavourite: ad.isFavourite,
+                                   onToggleFavourites: {
+                        ad.isFavourite = !ad.isFavourite
+                        if ad.isFavourite {
+                            viewModel.saveToFavourites(ad: ad)
+                        } else {
+                            viewModel.removeFromFavourites(ad: ad)
+                        }
+                    })
                 }
             }.padding(16)
         }
