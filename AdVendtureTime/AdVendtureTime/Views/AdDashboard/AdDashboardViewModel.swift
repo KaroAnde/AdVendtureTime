@@ -54,4 +54,34 @@ class AdDashboardViewModel: ObservableObject {
             }, receiveValue: {_ in})
             .store(in: &cancellables)
     }
+    
+    func fetchAdsFromFile() {
+        self.isLoading = true
+        repository.fetchAdsFromFile()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                if case .failure(_) = completion {
+                    Haptics.shared.notify(.error)
+                }
+                self.isLoading = false
+            }, receiveValue: { [weak self] localAdData in
+                self?.ads = localAdData
+            })
+            .store(in: &cancellables)
+    }
+    
+    func updateFavourites(adItem: AdItem) {
+        self.isLoading = true
+        repository.updateAndReadFavouriteItems(favouriteAd: adItem)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                if case .failure(_) = completion {
+                    Haptics.shared.notify(.error)
+                }
+                self.isLoading = false
+            }, receiveValue: { items  in
+                self.ads = items
+            })
+            .store(in: &cancellables)
+    }
 }

@@ -8,31 +8,69 @@
 import SwiftUI
 
 struct AdDashboardView: View {
-    @StateObject var viewModel: AdDashboardViewModel
- 
+    @StateObject var viewModel: AdDashboardViewModel = AdDashboardViewModel()
+    @Binding var shouldShowFavourites: Bool
     
     var body: some View {
+        ScrollView {
+            if shouldShowFavourites {
+                favouriteView
+            } else {
+                adDashboardView
+            }
+        }.onAppear {
+            print("+ shouldShow", $shouldShowFavourites)
+        }
+    }
+    
+    @ViewBuilder var adDashboardView: some View {
         let columns = [GridItem(.flexible(), spacing: spacing),
                        GridItem(.flexible(), spacing: spacing)]
-        ScrollView {
-            LazyVGrid(columns: columns, spacing: spacing) {
-                ForEach(viewModel.ads.indices, id: \.self) { i in
-                    let ad = viewModel.ads[i]
-                    VendAdCardView(imageURL: ad.fullImageURL,
-                                   title: ad.title,
-                                   location: ad.location,
-                                   priceValue: ad.priceValue,
-                                   isFavourite: $viewModel.ads[i].isFavourite,
-                                   isLoading: $viewModel.isLoading)
-                    .onChange(of: viewModel.ads[i].isFavourite) { _, newValue in
-                        viewModel.updateFavourites(ad: ad)
-                    }
+        
+        LazyVGrid(columns: columns, spacing: spacing) {
+            ForEach(viewModel.ads.indices, id: \.self) { index in
+                let adBinding = $viewModel.ads[index]
+                
+                VendAdCardView(
+                    imageURL: adBinding.fullImageURL.wrappedValue,
+                    title: adBinding.title.wrappedValue,
+                    location: adBinding.location.wrappedValue,
+                    priceValue: adBinding.priceValue.wrappedValue,
+                    isFavourite: adBinding.isFavourite,
+                    isLoading: $viewModel.isLoading
+                )
+                .onChange(of: adBinding.isFavourite.wrappedValue) { old, new in
+                    
                 }
-            }.padding(padding)
+            }
         }
+        .padding(padding)
+    }
+    
+    @ViewBuilder var favouriteView: some View {
+        LazyVStack {
+            let favIndices = viewModel.ads
+                .indices
+                .filter { viewModel.ads[$0].isFavourite }
+            
+            LazyVStack {
+                ForEach(favIndices, id: \.self) { index in
+                    let adBinding = $viewModel.ads[index]
+                    
+                    VendAdCardView(
+                        imageURL: adBinding.fullImageURL.wrappedValue,
+                        title: adBinding.title.wrappedValue,
+                        location: adBinding.location.wrappedValue,
+                        priceValue: adBinding.priceValue.wrappedValue,
+                        isFavourite: adBinding.isFavourite,
+                        isLoading: $viewModel.isLoading
+                    )
+                }
+            }
+        }.padding(padding)
     }
 }
 
 #Preview {
-    AdDashboardView(viewModel: AdDashboardViewModel())
+    AdDashboardView(shouldShowFavourites: .constant(true))
 }

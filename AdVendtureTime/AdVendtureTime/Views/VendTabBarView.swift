@@ -18,12 +18,10 @@ struct VendTabBarView: View {
 }
 
 struct VendCustomTabbar: View {
-    let adDashboardViewModel = AdDashboardViewModel()
-    let favouritesViewModel = FavouritesViewModel()
-    @State private var selectedTab = 0
+    @State var shouldShowFavourites = false
     var body: some View {
         VStack(spacing: 0){
-            tabContent
+            AdDashboardView(shouldShowFavourites: $shouldShowFavourites)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay(alignment: .bottom) {
@@ -45,12 +43,12 @@ struct VendCustomTabbar: View {
                         .frame(width: iconSize, height: iconSize)
                     Text("Home")
                 }
-                .foregroundStyle(selectedTab == 0 ? .vendRust : .vendDarkerPink)
+                .foregroundStyle(!shouldShowFavourites ? .vendRust : .vendDarkerPink)
                 .frame(width: buttonWidth, height: buttonHeight)
-                .background(Capsule().fill(selectedTab == 0 ? .vendDarkerPink : .vendRust))
+                .background(Capsule().fill(!shouldShowFavourites ? .vendDarkerPink : .vendRust))
                 .padding()
                 .onTapGesture {
-                    selectedTab = 0
+                    shouldShowFavourites = false
                 }
                 
                 VStack {
@@ -58,27 +56,15 @@ struct VendCustomTabbar: View {
                         .frame(width: iconSize, height: iconSize)
                     Text("Favourites")
                 }
-                .foregroundStyle(selectedTab == 1 ? .vendRust : .vendDarkerPink)
+                .foregroundStyle(shouldShowFavourites ? .vendRust : .vendDarkerPink)
                 .frame(width: buttonWidth, height: buttonHeight)
-                .background(Capsule().fill(selectedTab == 1 ? .vendDarkerPink : .vendRust))
+                .background(Capsule().fill(shouldShowFavourites ? .vendDarkerPink : .vendRust))
                 .padding()
                 .onTapGesture {
-                    selectedTab = 1
+                    shouldShowFavourites = true
                 }
             }
             .foregroundStyle(.vendLightPink)
-        }
-    }
-    
-    @ViewBuilder
-    var tabContent: some View {
-        switch selectedTab {
-        case 0:
-            AdDashboardView(viewModel: adDashboardViewModel)
-        case 1:
-            FavouritesView(viewModel: favouritesViewModel)
-        default:
-            AdDashboardView(viewModel: adDashboardViewModel)
         }
     }
 }
