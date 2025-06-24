@@ -21,7 +21,7 @@ struct VendCustomTabbar: View {
     @State var shouldShowFavourites = false
     var body: some View {
         VStack(spacing: 0){
-            AdDashboardView(shouldShowFavourites: $shouldShowFavourites)
+            VendAdDashboardView(shouldShowFavourites: $shouldShowFavourites)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay(alignment: .bottom) {

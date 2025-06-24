@@ -6,7 +6,7 @@
 //
 import Foundation
 
-extension AdDashboardView {
+extension VendAdDashboardView {
     var padding: CGFloat {
         return 16
     }
