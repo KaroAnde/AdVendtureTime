@@ -18,8 +18,6 @@ struct AdDashboardView: View {
             } else {
                 adDashboardView
             }
-        }.onAppear {
-            print("+ shouldShow", $shouldShowFavourites)
         }
     }
     
