@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AdDashboardView: View {
+struct VendAdDashboardView: View {
     @StateObject var viewModel: AdDashboardViewModel = AdDashboardViewModel()
     @Binding var shouldShowFavourites: Bool
     
@@ -16,12 +16,12 @@ struct AdDashboardView: View {
             if shouldShowFavourites {
                 favouriteView
             } else {
-                adDashboardView
+                allAdsView
             }
         }
     }
     
-    @ViewBuilder var adDashboardView: some View {
+    @ViewBuilder var allAdsView: some View {
         let columns = [GridItem(.flexible(), spacing: spacing),
                        GridItem(.flexible(), spacing: spacing)]
         
@@ -73,5 +73,5 @@ struct AdDashboardView: View {
 }
 
 #Preview {
-    AdDashboardView(shouldShowFavourites: .constant(true))
+    VendAdDashboardView(shouldShowFavourites: .constant(true))
 }

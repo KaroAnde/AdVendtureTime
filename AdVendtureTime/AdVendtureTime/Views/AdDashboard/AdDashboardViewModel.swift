@@ -29,27 +29,27 @@ class AdDashboardViewModel: ObservableObject {
     
     func fetchAds() {
         isLoading = true
-            repository
-                .getAds()
-                //fallback to disk if request fails
-                .catch { [weak self] error -> AnyPublisher<[AdItem], Error> in
-                    guard let self = self else {
-                        return Fail(error: error).eraseToAnyPublisher()
-                    }
-                    return self.repository
-                               .fetchAdsFromFile()
-                               .eraseToAnyPublisher()
+        repository
+            .getAds()
+        //fallback to disk if request fails
+            .catch { [weak self] error -> AnyPublisher<[AdItem], Error> in
+                guard let self = self else {
+                    return Fail(error: error).eraseToAnyPublisher()
                 }
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] completion in
-                    self?.isLoading = false
-                    if case .failure = completion {
-                        Haptics.shared.notify(.error)
-                    }
-                } receiveValue: { [weak self] adData in
-                    self?.ads = adData
+                return self.repository
+                    .fetchAdsFromFile()
+                    .eraseToAnyPublisher()
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                self?.isLoading = false
+                if case .failure = completion {
+                    Haptics.shared.notify(.error)
                 }
-                .store(in: &cancellables)
+            } receiveValue: { [weak self] adData in
+                self?.ads = adData
+            }
+            .store(in: &cancellables)
     }
     
     func updateFavourites(ad: AdItem) {
