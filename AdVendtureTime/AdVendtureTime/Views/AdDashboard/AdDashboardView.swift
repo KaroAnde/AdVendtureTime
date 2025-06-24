@@ -38,7 +38,7 @@ struct AdDashboardView: View {
                     isLoading: $viewModel.isLoading
                 )
                 .onChange(of: adBinding.isFavourite.wrappedValue) { old, new in
-                    
+                    viewModel.updateFavourites(ad: adBinding.wrappedValue)
                 }
             }
         }
@@ -62,9 +62,12 @@ struct AdDashboardView: View {
                         priceValue: adBinding.priceValue.wrappedValue,
                         isFavourite: adBinding.isFavourite,
                         isLoading: $viewModel.isLoading
-                    )
+                    ).onChange(of: adBinding.isFavourite.wrappedValue) { old, new in
+                        viewModel.updateFavourites(ad: adBinding.wrappedValue)
+                    }
                 }
             }
+            
         }.padding(padding)
     }
 }

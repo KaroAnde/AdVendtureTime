@@ -28,18 +28,28 @@ class AdDashboardViewModel: ObservableObject {
     }
     
     func fetchAds() {
-        self.isLoading = true
-        repository.getAds()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                if case .failure(_) = completion {
-                    Haptics.shared.notify(.error)
+        isLoading = true
+            repository
+                .getAds()
+                //fallback to disk if request fails
+                .catch { [weak self] error -> AnyPublisher<[AdItem], Error> in
+                    guard let self = self else {
+                        return Fail(error: error).eraseToAnyPublisher()
+                    }
+                    return self.repository
+                               .fetchAdsFromFile()
+                               .eraseToAnyPublisher()
                 }
-                self.isLoading = false
-            }, receiveValue: { [weak self] adData in
-                self?.ads = adData
-            })
-            .store(in: &cancellables)
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] completion in
+                    self?.isLoading = false
+                    if case .failure = completion {
+                        Haptics.shared.notify(.error)
+                    }
+                } receiveValue: { [weak self] adData in
+                    self?.ads = adData
+                }
+                .store(in: &cancellables)
     }
     
     func updateFavourites(ad: AdItem) {
@@ -47,7 +57,7 @@ class AdDashboardViewModel: ObservableObject {
         favouritesService.updateFavouriteAdItems(favouriteAds: [ad])
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
-                if case .failure(let error) = completion {
+                if case .failure(_) = completion {
                     self.isLoading = false
                 }
                 self.isLoading = false
