@@ -8,6 +8,7 @@
 import Combine
 import Foundation
 
+/// This repository handles transforming data from the service layer, and also handles merging of data from api and filemanager
 protocol VendAdRepositoryProtocol {
     func getAds() -> AnyPublisher<[AdItem], Error>
     func updateAndReadFavouriteItems(favouriteAd: AdItem) -> AnyPublisher<[AdItem], Error>
@@ -24,6 +25,7 @@ class VendAdRepository: VendAdRepositoryProtocol {
         self.favouritesService = favouritesService
     }
     
+    // Merge data from api and filemanager as the DTO does not have isFavourite field
     func getAds() -> AnyPublisher<[AdItem], Error> {
         let apiAds = apiService.fetchAds().map { ads in
             ads.items.map { adItem in
@@ -60,9 +62,12 @@ class VendAdRepository: VendAdRepositoryProtocol {
         favouritesService
             .readFromFavouriteAdItems()
             .map { items in
-                let documentsURL = FileManager.default
+                guard let documentsURL = FileManager.default
                     .urls(for: .documentDirectory, in: .userDomainMask)
-                    .first! // TODO: Force unwrap
+                    .first else {
+                    return items
+                }
+                
                 let imagesFolder = documentsURL
                     .appendingPathComponent("VendAdImages", isDirectory: true)
 

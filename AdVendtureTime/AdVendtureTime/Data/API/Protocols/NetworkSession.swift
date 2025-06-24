@@ -7,6 +7,7 @@
 import Combine
 import Foundation
 
+// protocol for taskpublisher to be able to mock and test
 protocol NetworkSession {
     func urlTaskPublisher(for url: URL) -> AnyPublisher<(data: Data, response: URLResponse), RequestError>
 }

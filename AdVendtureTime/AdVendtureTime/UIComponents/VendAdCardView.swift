@@ -112,6 +112,7 @@ struct VendAdCardView: View {
     }
 }
 
+// preview helper to inject viewmodel with mockdata
 struct VendAdCardPreviewHelper: View {
     @ObservedObject var viewModel: AdDashboardViewModel
     @State var isFavourite: Bool = false
