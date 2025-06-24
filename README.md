@@ -2,8 +2,6 @@
 
 <img src="https://github.com/user-attachments/assets/6a7a8565-2181-4e63-9c87-68802085595e" width= 400, height=400>
 
-Technical assignment for the dream job ✨
-
 
 This repository contains a simple, scalable iOS app that displays a list of ads fetched from a remote JSON endpoint as well as favourite ads. 
 Users can view all ads, mark ads as favorites, and later access those favorites offline. The goal was to implement a clean, maintainable structure with a strong focus on clarity and performance.
