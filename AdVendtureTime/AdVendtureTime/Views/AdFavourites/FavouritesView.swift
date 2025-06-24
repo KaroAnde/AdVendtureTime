@@ -26,7 +26,10 @@ struct FavouritesView: View {
                         viewModel.updateFavourites(adItem: favouriteAd)
                     }
                 }
-            }.padding(16)
+            }.onAppear { 
+                viewModel.fetchAdsFromFile()
+            }
+            .padding(16)
         }
     }
     
